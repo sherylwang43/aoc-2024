@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.Arrays;
 public class ReadFile {
     public static void main(String[] args) {
-        String filePath = "C:\\Users\\Sheryl\\Downloads\\input"; // Replace with your file path
+        String filePath = "C:\\Users\\Sheryl\\Downloads\\input"; 
         ArrayList<String> one = new ArrayList<String>();
         ArrayList<String> two = new ArrayList<String>();
         try (Scanner scanner = new Scanner(new File(filePath))) {
@@ -17,9 +17,9 @@ public class ReadFile {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-     //   System.out.println(one.toString());
-      //  System.out.println(two.toString());
         int diff = 0;
+        // Find and remove mins from both lists until they are empty
+        // On each iteration, add difference b/n mins to the diff variable
         while(one.size()>0 && two.size()>0) {
             int oneMin = findMin(one);
             int twoMin = findMin(two);
@@ -27,6 +27,7 @@ public class ReadFile {
         }
 
         System.out.println(diff);
+        // lazy reset of both arrays lol
         try (Scanner scanner = new Scanner(new File(filePath))) {
             while (scanner.hasNextLine()) {
                 String[] line = scanner.nextLine().split(" ");
@@ -36,8 +37,11 @@ public class ReadFile {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        
         int similarity = 0;
+        // iterate through one array find similarity with two
         for(String a: one) {
+            // for each string, parse into int before running function
             int b = Integer.parseInt(a);
             similarity += findNumMatches(b, two);
         }
@@ -46,6 +50,7 @@ public class ReadFile {
 
     }
 
+    // finds and removes the minimum of array
     public static int findMin(ArrayList<String> arr) {
         int min = Integer.parseInt(arr.get(0));
         int ind = 0;
@@ -60,6 +65,7 @@ public class ReadFile {
         return min;
     }
 
+    // find count = the # of times that an int n appears in an array, and return that count * n
     public static int findNumMatches(int n, ArrayList<String>  arr) {
         int count=0;
         for(String a: arr) {
@@ -68,7 +74,6 @@ public class ReadFile {
                 count++;
             }
         }
-       // System.out.println(count);
         return count*n;
     }
 }
