@@ -15,7 +15,9 @@ public class day4 {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        ArrayList<Boolean> trues = new ArrayList<Boolean>();
         int numXmasMatches=0;
+        int numX_Mas=0;
         // Since the input is a bunch of lines of Strings with the same length, it can be thought of as a 2d array of characters
         // Here we iterate through each line and each character in line
         for(int i = 0; i<lines.size(); i++) {
@@ -23,108 +25,64 @@ public class day4 {
             for(int j=0; j< line.length(); j++) {
                 // I feel like there is a java shortcut for this, but IDK what it is
                 // If any of these functions find an XMAS "centered" at the character in the line, increase counter
-                
-                if(horizontalMatch(i, j, 1, lines)) { 
-                    numXmasMatches++;
+                int[] directions = {1,-1};
+                for(int k: directions) {
+                    // Each checker function runs on the selected character, if it works, add a TRUE to the trues array
+                    horizontalMatch(i, j, k, lines, trues);
+                    verticalMatch(i, j, k, lines, trues);
+                    diagonalMatch(i, j, k, 1, lines, trues);
+                    diagonalMatch(i, j, k, -1, lines, trues);
                 }
-                if(horizontalMatch(i, j, -1, lines)) {
-                    numXmasMatches++;
-                }
+                numXmasMatches = trues.size();
 
-                if(verticalMatch(i, j, 1, lines)) {
-                    numXmasMatches++;
-                }
-                if(verticalMatch(i, j, -1, lines)) {
-                    numXmasMatches++;
-                }
-
-                if(diagonalMatch(i, j, 1, 1, lines) ) {
-                    numXmasMatches++;
-                }
-
-                if(diagonalMatch(i, j, -1, -1, lines)){
-                    numXmasMatches++;
-                }
-
-                if(diagonalMatch(i, j, 1, -1, lines) ) {
-                    numXmasMatches++;
-                }
-                
-                if(diagonalMatch(i, j, -1, 1, lines)) {
-                    numXmasMatches++;
-                }
-
-            }
-
-            
-            
-        }
-     
-        System.out.println(numXmasMatches);
-
-        int numX_Mas=0;
-            for(int i=0; i<lines.size(); i++) {
-                for(int j=0; j<lines.get(i).length(); j++) {
+                // Part two
+                if(lines.get(i).charAt(j) == 'A') {
                     try {
-                        // Very lazy code because I didn't want to think through making more functions or for loops
-                        
-                        // See if left-leaning diagonal centered at i is a "MAS" (either forwards or backwards)
-                        Boolean d1=false;
-                        String diagonal = "";
-                        diagonal+=lines.get(i-1).charAt(j-1);
-                        diagonal+=lines.get(i).charAt(j);
-                        diagonal+=lines.get(i+1).charAt(j+1);
-                        if (diagonal.equals("MAS") | diagonal.equals("SAM")) {
-                            d1 = true;
-                        }
+                        String one = ""+ lines.get(i-1).charAt(j-1) + lines.get(i+1).charAt(j+1); // string with one diagonal
+                        String two = ""+lines.get(i-1).charAt(j+1) + lines.get(i+1).charAt(j-1); // string with other diagonal
 
-                        // See if right-leaning diagonal centered at i is a "MAS" (either forwards or backwards)
-                        Boolean d2=false;
-                        diagonal="";
-                        diagonal+=lines.get(i-1).charAt(j+1);
-                        diagonal+=lines.get(i).charAt(j);
-                        diagonal+=lines.get(i+1).charAt(j-1);
-                        if (diagonal.equals("MAS") | diagonal.equals("SAM")) {
-                            d2 = true;
-                        }
-                        // if both right and left leaning diagonals are "MAS", then this is a valid X-MAS, increase counter
-                        if(d1&&d2) {
+                        if( (one.equals("SM") | one.equals("MS")) && 
+                        (two.equals("SM") | two.equals("MS")) ) {
                             numX_Mas++;
                         }
-
-                    /*  If any indexoutofbounds occurs, then the character is too close to the edge for a valid X-MAS so we move onto
-                    another character in the line*/
                     } catch (IndexOutOfBoundsException e) {
 
                     }
                 }
-                    
-                
-            }
-            System.out.println(numX_Mas);
+            }            
+        }
+     
+        System.out.println(numXmasMatches);
+        System.out.println(numX_Mas);
     }
 
     // Here "direction" indicated whether we are moving right (direction=1), or left (direction=-1). It also serves as a useful multiplier
-    public static boolean horizontalMatch(int vertIndex, int horIndex, int direction, ArrayList<String> lines) {
+    public static boolean horizontalMatch(int vertIndex, int horIndex, int direction, ArrayList<String> lines, ArrayList<Boolean> arr) {
         try {
             String a = "";
             for(int i=0; i<4; i++) {
                 a+=lines.get(vertIndex).charAt(horIndex+direction*i);
             }
-            if (a.equals("XMAS")) return true;
+            if (a.equals("XMAS")) {
+                arr.add(true);
+                 return true;
+            }
         } catch (IndexOutOfBoundsException e) {
                 
         }
         return false;
     }
     // Direction indicates whether we are moving upwards (-1) or downwards (1)
-    public static boolean verticalMatch(int vertIndex, int horizontalIndex, int direction, ArrayList<String> lines) {
+    public static boolean verticalMatch(int vertIndex, int horizontalIndex, int direction, ArrayList<String> lines, ArrayList<Boolean> arr) {
         try {
             String a = "";
             for(int i=0; i<4; i++) {
                 a+=lines.get(vertIndex+direction*i).charAt(horizontalIndex);
             }
-            if (a.equals("XMAS")) return true;
+            if (a.equals("XMAS")) { 
+                arr.add(true);
+                return true;
+            }
         } catch (IndexOutOfBoundsException e) {
                 
         }
@@ -132,13 +90,16 @@ public class day4 {
     }
         
     // Two direction variables here, horizontal and vertical so we can check all four diagonals
-    public static boolean diagonalMatch(int vertIndex, int horIndex, int vertDirection, int horDirection, ArrayList<String> lines) {
+    public static boolean diagonalMatch(int vertIndex, int horIndex, int vertDirection, int horDirection, ArrayList<String> lines, ArrayList<Boolean> arr) {
             try {
                 String a = "";
                 for(int i=0; i<4; i++) {
                     a+=lines.get(vertIndex+vertDirection*i).charAt(horIndex+horDirection*i);
                 }
-                if (a.equals("XMAS")) return true;
+                if (a.equals("XMAS")) { 
+                    arr.add(true);
+                    return true;
+                }
             } catch (IndexOutOfBoundsException e) {
 
             }
