@@ -23,8 +23,6 @@ public class day4 {
         for(int i = 0; i<lines.size(); i++) {
             String line = lines.get(i);
             for(int j=0; j< line.length(); j++) {
-                // I feel like there is a java shortcut for this, but IDK what it is
-                // If any of these functions find an XMAS "centered" at the character in the line, increase counter
                 int[] directions = {1,-1};
                 for(int k: directions) {
                     // Each checker function runs on the selected character, if it works, add a TRUE to the trues array
@@ -36,7 +34,7 @@ public class day4 {
                 numXmasMatches = trues.size();
 
                 // Part two
-                if(lines.get(i).charAt(j) == 'A') {
+                if(lines.get(i).charAt(j) == 'A') { // finds A for center of X
                     try {
                         String one = ""+ lines.get(i-1).charAt(j-1) + lines.get(i+1).charAt(j+1); // string with one diagonal
                         String two = ""+lines.get(i-1).charAt(j+1) + lines.get(i+1).charAt(j-1); // string with other diagonal
