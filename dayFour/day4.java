@@ -15,9 +15,11 @@ public class day4 {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
         ArrayList<Boolean> trues = new ArrayList<Boolean>();
         int numXmasMatches=0;
         int numX_Mas=0;
+
         // Since the input is a bunch of lines of Strings with the same length, it can be thought of as a 2d array of characters
         // Here we iterate through each line and each character in line
         for(int i = 0; i<lines.size(); i++) {
@@ -34,7 +36,7 @@ public class day4 {
                 numXmasMatches = trues.size();
 
                 // Part two
-                if(lines.get(i).charAt(j) == 'A') { // finds A for center of X
+                if(lines.get(i).charAt(j) == 'A') {
                     try {
                         String one = ""+ lines.get(i-1).charAt(j-1) + lines.get(i+1).charAt(j+1); // string with one diagonal
                         String two = ""+lines.get(i-1).charAt(j+1) + lines.get(i+1).charAt(j-1); // string with other diagonal
@@ -55,7 +57,7 @@ public class day4 {
     }
 
     // Here "direction" indicated whether we are moving right (direction=1), or left (direction=-1). It also serves as a useful multiplier
-    public static boolean horizontalMatch(int vertIndex, int horIndex, int direction, ArrayList<String> lines, ArrayList<Boolean> arr) {
+    public static void horizontalMatch(int vertIndex, int horIndex, int direction, ArrayList<String> lines, ArrayList<Boolean> arr) {
         try {
             String a = "";
             for(int i=0; i<4; i++) {
@@ -63,15 +65,13 @@ public class day4 {
             }
             if (a.equals("XMAS")) {
                 arr.add(true);
-                 return true;
             }
         } catch (IndexOutOfBoundsException e) {
                 
         }
-        return false;
     }
     // Direction indicates whether we are moving upwards (-1) or downwards (1)
-    public static boolean verticalMatch(int vertIndex, int horizontalIndex, int direction, ArrayList<String> lines, ArrayList<Boolean> arr) {
+    public static void verticalMatch(int vertIndex, int horizontalIndex, int direction, ArrayList<String> lines, ArrayList<Boolean> arr) {
         try {
             String a = "";
             for(int i=0; i<4; i++) {
@@ -79,16 +79,14 @@ public class day4 {
             }
             if (a.equals("XMAS")) { 
                 arr.add(true);
-                return true;
             }
         } catch (IndexOutOfBoundsException e) {
                 
         }
-        return false;
     }
         
     // Two direction variables here, horizontal and vertical so we can check all four diagonals
-    public static boolean diagonalMatch(int vertIndex, int horIndex, int vertDirection, int horDirection, ArrayList<String> lines, ArrayList<Boolean> arr) {
+    public static void diagonalMatch(int vertIndex, int horIndex, int vertDirection, int horDirection, ArrayList<String> lines, ArrayList<Boolean> arr) {
             try {
                 String a = "";
                 for(int i=0; i<4; i++) {
@@ -96,12 +94,10 @@ public class day4 {
                 }
                 if (a.equals("XMAS")) { 
                     arr.add(true);
-                    return true;
                 }
             } catch (IndexOutOfBoundsException e) {
 
             }
-            return false;
         }
 
         
